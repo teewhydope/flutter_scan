@@ -1,11 +1,9 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scan/scan.dart';
-import 'package:images_picker/images_picker.dart';
 import 'package:scan_example/scan.dart';
 
 void main() {
@@ -59,9 +57,13 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                         child: Text("parse from image"),
                         onPressed: () async {
-                          List<Media>? res = await ImagesPicker.pick();
-                          if (res != null) {
-                            String? str = await Scan.parse(res[0].path);
+                          final ImagePicker picker = ImagePicker();
+                          // Pick an image.
+                          final XFile? image = await picker.pickImage(
+                              source: ImageSource.gallery);
+
+                          if (image != null) {
+                            String? str = await Scan.parse(image.path);
                             if (str != null) {
                               setState(() {
                                 qrcode = str;
